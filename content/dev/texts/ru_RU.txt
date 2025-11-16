@@ -1,0 +1,4 @@
+Project=Проект
+Help=Помощь
+New project=Новый проект
+Open project=Открыть проект

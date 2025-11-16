@@ -1,0 +1,11 @@
+<panel color='0' orientation='horizontal'>
+    <button id='file_btn' color='0' hover-color='#FFFFFF30' onclick='show_file_context_menu()'>@Project</button>
+    <button color='0' hover-color='#FFFFFF30'>@Help</button>
+    <image id='connect_btn' size='32' src='gui/connect' hover-color='400' 
+           interactive='true' onclick='connect_debugging()' 
+           tooltip="@Connect to existing instance"/>
+    <image id='run_btn' size='32' src='gui/play' hover-color='400' 
+           interactive='true' onclick='start_debugging()' tooltip="@Start debugging"/>
+    <image id='continue_btn' size='32' src='gui/play' hover-color='400' 
+           interactive='true' visible='false' onclick='resume_debugging()' tooltip="@Continue"/>
+</panel>

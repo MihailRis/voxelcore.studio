@@ -1,0 +1,4 @@
+<panel size-func="unpack(gui.get_viewport())" color='0' scrollable='false'>
+    <iframe id='header' src='dev:header' size-func='-1,32'/>
+    <iframe id='editor_frame' src='dev:editor' size-func="-1,-37"/>
+</panel>
