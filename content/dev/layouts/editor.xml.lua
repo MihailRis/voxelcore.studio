@@ -62,24 +62,48 @@ local function get_internal_path(source, project_packs)
     return file.join(pack_info.path, path)
 end
 
-function request_value(frame_index, var_id)
-    debugging_client.request_value(frame_index, var_id, function(value)
-        local panel = document["lv_"..frame_index.."_"..var_id]
-        local names = {}
-        for name, _ in pairs(value) do
-            table.insert(names, name)
-        end
-        table.sort(names)
-        for i, name in ipairs(names) do
-            local var_info = value[name]
+local function add_table(panel, value, path, indent, id_prefix, frame_index, var_id)
+    local names = {}
+    for name, _ in pairs(value) do
+        table.insert(names, name)
+    end
+    table.sort(names)
+    for i, name in ipairs(names) do
+        local var_info = value[name]
+        local id = id_prefix .. "." .. name
+        if var_info.type == "table" then
+            local newpath = table.copy(path)
+            table.insert(newpath, name)
+            local newpathstr = json.tostring(newpath):sub(2)
+            newpathstr = newpathstr:sub(1, #newpathstr - 1)
             panel:add(string.format([[
-                <panel size="24" orientation="horizontal" color='0'>
-                    <label margin="12,2,2,2">%s</label>
+                <panel id="%s" orientation="horizontal" color='0' hover-color="#FFFFFF30"
+                       onclick='request_value(%s, %s, {%s}, 0)'>
+                    <label margin="%s,2,2,2">%s</label>
                     <label margin="2,2,2,2" color="#FFFFFF40">: %s = </label>
                     <label margin="2,2,2,2">%s</label>
                 </panel>
-            ]], name, var_info.type, var_info.short))
+            ]], id, frame_index, var_id, newpathstr, indent * 12 + 2, name, var_info.type, var_info.short))
+        else
+            panel:add(string.format([[
+                <panel size="24" orientation="horizontal" color='0'>
+                    <label margin="%s,2,2,2">%s</label>
+                    <label margin="2,2,2,2" color="#FFFFFF40">: %s = </label>
+                    <label margin="2,2,2,2">%s</label>
+                </panel>
+            ]], indent * 12 + 2, name, var_info.type, var_info.short))
         end
+    end
+end
+
+function request_value(frame_index, var_id, path, indent)
+    debugging_client.request_value(frame_index, var_id, path, function(value)
+        local id = "lv_"..frame_index.."_"..var_id
+        for i, elem in ipairs(path) do
+            id = id .. "." .. elem
+        end
+        local panel = document[id]
+        add_table(panel, value, path, indent + 1, id, frame_index, var_id)
     end)
 end
 
@@ -95,7 +119,9 @@ local function show_locals(stack, frame_index)
         if var_info.type == "table" then
             locals_panel:add(string.format([[
                 <panel id="lv_%s_%s" color="0">
-                    <panel size="24" orientation="horizontal" color='0' hover-color="#FFFFFF30" onclick="request_value(%s, %s)">
+                    <panel size="24" orientation="horizontal" color='0' 
+                           hover-color="#FFFFFF30" 
+                           onclick="request_value(%s, %s, {}, 0)">
                         <label margin="2">%s</label>
                         <label margin="2" color="#FFFFFF40">: %s = </label>
                         <label margin="2">%s</label>

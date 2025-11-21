@@ -1,6 +1,6 @@
 <panel size-func="unpack(gui.get_viewport())" orientation="horizontal" color='0'>
-    <panel size="60" color='0'></panel>
-    <splitbox size-func="-60,-1" id="editorRoot" orientation="horizontal" split-pos="0.2">
+    <panel size="40" color='0'></panel>
+    <splitbox size-func="-40,-1" id="editorRoot" orientation="horizontal" split-pos="0.2">
         <splitbox split-pos="0.5">
             <iframe src="dev:files_panel"></iframe>
             <panel id="locals"

@@ -98,7 +98,7 @@ function this.is_debugging()
     return debugging
 end
 
-function this.request_value(frame_index, var_index, callback)
+function this.request_value(frame_index, var_index, path, callback)
     if not connected then
         return
     end
@@ -106,8 +106,8 @@ function this.request_value(frame_index, var_index, callback)
         "type": "get-value",
         "frame": %s,
         "local": %s,
-        "path": []
-    }]], frame_index, var_index))
+        "path": %s
+    }]], frame_index, var_index, #path > 0 and json.tostring(path) or "[]"))
     value_callback = callback
 end
 
@@ -130,7 +130,7 @@ local function listen_server(socket)
             break
         end
         local data = json.parse(utf8.tostring(payload))
-        -- debug.print(data)
+        debug.print(utf8.tostring(payload))
         if data.type == "paused" then
             events.emit("dev:debugging_paused", data.reason, data.stack)
         elseif data.type == "value" then
