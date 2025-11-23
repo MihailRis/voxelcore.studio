@@ -58,4 +58,10 @@ end
 
 function on_open()
    document.root:setInterval(10, update)
+
+    input.add_callback("dev.run_debug", function()
+        if not client.is_debugging() then
+            client.start_debugging(function() end, function() end)
+        end
+    end, document.root, true)
 end

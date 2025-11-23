@@ -258,6 +258,19 @@ function show_editor_context_menu()
     }, {toggle_breakpoint=toggle_breakpoint})
 end
 
+function on_control_combination(keycode)
+    if keycode == input.keycode("s") then
+        save_current_file()
+    elseif keycode == input.keycode("r") then
+        run_current_file()
+    end
+end
+
+
+events.on("dev:open_file", function(internal_path, path)
+    open_file_in_editor(internal_path, path, 1)
+end)
+
 function on_open()
     local editor = document.editor
     editor:add("<container id='pause_position' color='#FFFF0030' size-func='-1,24' visible='false'></container>")
@@ -271,8 +284,4 @@ function on_open()
     document.root:setInterval(10, function()
         schedule:tick(0.01)
     end)
-
-    input.add_callback("dev.run_debug", function()
-        print("F5 pressed")
-    end, document.root, true)
 end

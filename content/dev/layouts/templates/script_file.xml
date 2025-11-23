@@ -1,0 +1,12 @@
+<container size="18">
+    <image src="gui/%{icon}" size="16"></image>
+    <label hover-color='#30A0FF'
+        pos="20,2"
+        interactive="true"
+        onclick='%{open_func}("%{filename}", "%{content_path}")'
+        markup='md'
+        tooltip='%{unit}'
+        size-func="-1,-1">
+        [#FFFFFF80]%{path}[#FFFFFFFF]%{name}
+    </label>
+</container>

@@ -3,6 +3,7 @@
         "gui/logo",
         "gui/play",
         "gui/stop",
-        "gui/connect"
+        "gui/connect",
+        "gui/lua_script"
     ]
 }
