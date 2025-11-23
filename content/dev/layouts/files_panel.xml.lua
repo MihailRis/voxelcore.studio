@@ -66,7 +66,7 @@ function on_open()
             add_files(packinfo.id..":modules", file.list(modules_dir), "module")
         end
         if file.isdir(scripts_dir) then
-            add_files(packinfo.id..":scripts", file.list(scripts_dir), "scripts")
+            add_files(packinfo.id..":scripts", file.list(scripts_dir), "lua_script")
         end
         build_files_list(registry)
     end

@@ -9,6 +9,7 @@ local disconnected_callback
 local schedule = Schedule()
 local app
 local listener
+local paused = false
 
 local function send(msg)
     if not socket then
@@ -116,6 +117,7 @@ function this.cancel_value_request()
 end
 
 local function listen_server(socket)
+    paused = false
     coroutine.yield()
     socket:recv_async(8) -- skipping header
 
@@ -132,7 +134,10 @@ local function listen_server(socket)
         local data = json.parse(utf8.tostring(payload))
         debug.print(utf8.tostring(payload))
         if data.type == "paused" then
+            paused = true
             events.emit("dev:debugging_paused", data.reason, data.stack)
+        elseif data.type == "resumed" then
+            paused = false
         elseif data.type == "value" then
             if value_callback then
                 value_callback(data.value)
@@ -140,6 +145,10 @@ local function listen_server(socket)
             end
         end
     end
+end
+
+function this.is_paused()
+    return paused and debugging
 end
 
 function this.connect_debugging(on_connected, on_disconnected, port)

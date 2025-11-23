@@ -62,6 +62,8 @@ function on_open()
     input.add_callback("dev.run_debug", function()
         if not client.is_debugging() then
             client.start_debugging(function() end, function() end)
+        elseif client.is_paused() then
+            client.resume()
         end
     end, document.root, true)
 end
