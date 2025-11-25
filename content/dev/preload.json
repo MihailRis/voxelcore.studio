@@ -4,6 +4,7 @@
         "gui/play",
         "gui/stop",
         "gui/connect",
-        "gui/lua_script"
+        "gui/lua_script",
+        "gui/code"
     ]
 }
