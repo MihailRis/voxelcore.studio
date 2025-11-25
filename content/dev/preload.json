@@ -5,6 +5,7 @@
         "gui/stop",
         "gui/connect",
         "gui/lua_script",
-        "gui/code"
+        "gui/code",
+        "gui/plus"
     ]
 }
