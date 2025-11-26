@@ -1,5 +1,7 @@
 <panel size-func="unpack(gui.get_viewport())" orientation="horizontal" color='0'>
-    <panel size="40" color='0'></panel>
+    <panel size="48" color='0' padding='10,6,6,6'>
+        <image src='gui/code' interactive='true' color='#FFFFFF80' hover-color='#FFFFFFFF'/>
+    </panel>
     <splitbox size-func="-40,-1" id="editorRoot" orientation="horizontal" split-pos="0.3">
         <splitbox split-pos="0.5">
             <iframe src="dev:files_panel"></iframe>
@@ -18,7 +20,7 @@
                                 color="#FFFFFF80" size="16" pos="4,6"
                                 hover-color="#1080FF"></image>
                         <panel orientation="horizontal" gravity="top-right" 
-                                size="60,16" padding="8" interval="8" color="0">
+                                size="68,24" padding="8" interval="8" color="0">
                             <image id="saveIcon" src="gui/save" tooltip="@Save" 
                                 enabled="false" interactive="true" 
                                 hover-color="#1080FF"
@@ -26,11 +28,6 @@
                                 color="#FFFFFF80" size="16"></image>
                             <image id="infoIcon" src="gui/info" tooltip="@editor.info.tooltip" 
                                 enabled="true" interactive="true" 
-                                color="#FFFFFF80" size="16"></image>
-                            <image id="syncIcon" src="gui/play" tooltip="@Run" 
-                                enabled="true" interactive="true" 
-                                hover-color="#1080FF"
-                                onclick="run_current_file()"
                                 color="#FFFFFF80" size="16"></image>
                         </panel>
                         <label id="title" pos="26,8"></label>
