@@ -40,6 +40,11 @@ end
 events.on("dev:debugging_stopped", function()
     local pause_position = document.pause_position
     pause_position.visible = false
+
+    local pause_position = document.pause_position
+    if pause_position.exists then
+        pause_position:destruct()
+    end
 end)
 
 events.on("dev:debugging_resumed", function()
@@ -239,6 +244,29 @@ function open_file_in_editor(internal_path, path, target_line)
     end)
 end
 
+function save_current_file()
+    if not current_file.internal_path then
+        return
+    end
+    file.write(current_file.internal_path, document.editor.text)
+    current_file.modified = false
+    document.saveIcon.enabled = false
+    document.title.text = gui.str('File')..' - '..current_file.path
+    document.editor.edited = false
+end
+
+local function refresh_file_title()
+    if current_file.internal_path == "" then
+        document.title.text = ""
+        return
+    end
+    local edited = document.editor.edited
+    current_file.modified = edited
+    document.saveIcon.enabled = edited
+    document.title.text = gui.str('File')..' - '..current_file.path
+        ..(edited and ' *' or '')
+end
+
 function toggle_breakpoint(line)
     if debugging_client.toggle_breakpoint(current_file.path, line) then
         add_breakpoint_indicator(line)
@@ -280,6 +308,10 @@ function on_open()
         file.join(project_packs.base.path, "scripts/hud.lua"),
         "base:scripts/hud.lua", 0
     )
+
+    schedule:set_interval(100, function()
+        refresh_file_title()
+    end)
 
     document.root:setInterval(10, function()
         schedule:tick(0.01)
