@@ -6,22 +6,7 @@ local Schedule = require "core:schedule"
 local schedule = Schedule()
 local current_file = {}
 
-local breakpoint_indicators = {}
-
-local function remove_breakpoint_indicator(line)
-    local indicator = document["breakpoint_"..line]
-    if indicator.exists then
-        indicator:destruct()
-    end
-end
-
-local function add_breakpoint_indicator(line, editor)
-    editor = editor or document.editor
-    local line_pos = editor:lineY(line) + 2
-    editor:add("<container id='breakpoint_"..line.."' color='#00FF0010'"
-    .." size-func='-1,24' pos='0,"..line_pos.."'></container>")
-    table.insert(breakpoint_indicators, line)
-end
+local breakpoints_view = require "breakpoints_view"
 
 local function clear_traceback()
     local tb_list = document.traceback
@@ -32,19 +17,12 @@ local function clear_traceback()
 end
 
 local function cleanup_editor()
-    for i, line in ipairs(breakpoint_indicators) do
-        remove_breakpoint_indicator(line)
-    end
+    breakpoints_view.clear()
 end
 
 events.on("dev:debugging_stopped", function()
     local pause_position = document.pause_position
     pause_position.visible = false
-
-    local pause_position = document.pause_position
-    if pause_position.exists then
-        pause_position:destruct()
-    end
 end)
 
 events.on("dev:debugging_resumed", function()
@@ -236,11 +214,7 @@ function open_file_in_editor(internal_path, path, target_line)
         if target_line then
             editor.caret = editor:linePos(target_line - 1)
         end
-
-        local breakpoints = debugging_client.get_file_breakpoints(path)
-        for i, line in ipairs(breakpoints) do
-            add_breakpoint_indicator(line, editor)
-        end
+        breakpoints_view.setup(debugging_client.get_file_breakpoints(path))
     end)
 end
 
@@ -268,11 +242,8 @@ local function refresh_file_title()
 end
 
 function toggle_breakpoint(line)
-    if debugging_client.toggle_breakpoint(current_file.path, line) then
-        add_breakpoint_indicator(line)
-    else
-        remove_breakpoint_indicator(line)
-    end
+    local state = debugging_client.toggle_breakpoint(current_file.path, line)
+    breakpoints_view.set_breakpoint(line, state)
 end
 
 function show_editor_context_menu()
@@ -300,6 +271,8 @@ events.on("dev:open_file", function(internal_path, path)
 end)
 
 function on_open()
+    breakpoints_view.init(document)
+
     local editor = document.editor
     editor:add("<container id='pause_position' color='#FFFF0030' size-func='-1,24' visible='false'></container>")
 
