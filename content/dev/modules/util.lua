@@ -41,4 +41,8 @@ function this.load_packs_info(content_dir)
     return packs_info
 end
 
+function this.get_project_path(name)
+    return file.join("user:projects", name)
+end
+
 return this

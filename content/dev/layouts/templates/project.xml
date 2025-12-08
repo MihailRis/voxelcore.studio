@@ -1,4 +1,4 @@
-<container size='100,40' color='#00000020' hover-color='#00000080' 
+<container id='%{id}' size='100,40' color='#00000020' hover-color='#00000080' 
             onclick="open_project('%{path}')">
     <label pos='12,0' size='100,40'>%{title}</label>
     <label gravity='top-right' size='200,40' color='#FFFFFF50'>%{path}</label>

@@ -276,12 +276,6 @@ function on_open()
     local editor = document.editor
     editor:add("<container id='pause_position' color='#FFFF0030' size-func='-1,24' visible='false'></container>")
 
-    local project_packs = project_control.get_packs()
-    open_file_in_editor(
-        file.join(project_packs.base.path, "scripts/hud.lua"),
-        "base:scripts/hud.lua", 0
-    )
-
     schedule:set_interval(100, function()
         refresh_file_title()
     end)
