@@ -1,5 +1,10 @@
 <container id='%{id}' size='100,40' color='#00000020' hover-color='#00000080' 
-            onclick="open_project('%{path}')">
+            onclick="open_project('%{path}')"
+            onmouseover='document["%{id}_del"].visible=true' 
+            onmouseout='document["%{id}_del"].visible=false'>
     <label pos='12,0' size='100,40'>%{title}</label>
     <label gravity='top-right' size='200,40' color='#FFFFFF50'>%{path}</label>
+    <image id='%{id}_del' src='gui/delete_icon' gravity='center-right' interactive='true' size='32'
+        color='#FFFFFF30' hover-color='#FFFFFF60' visible='false'
+        onclick="delete_project('%{path}')" />
 </container>

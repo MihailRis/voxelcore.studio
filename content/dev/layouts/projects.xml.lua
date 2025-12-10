@@ -1,11 +1,13 @@
 local util = require "util"
 local project_control = require "project_control"
 
-function on_open()
+local function refresh_projects_list()
     local projects_dir = "user:projects"
 
     local projects = {}
     local dirs = file.list(projects_dir)
+
+    document.projects:clear()
     for i, path in ipairs(dirs) do
         local project = toml.parse(file.read(file.join(path, "project.toml")))
         project.path = path
@@ -13,6 +15,10 @@ function on_open()
         document.projects:add(gui.template("project", project))
         table.insert(projects, project)
     end
+end
+
+function on_open()
+    refresh_projects_list()
 end
 
 function open_project(path)
@@ -40,4 +46,12 @@ function new_project()
         end
         return #text > 0 and not file.exists(util.get_project_path(text))
     end, gui.str("Create project"))
+end
+
+function delete_project(path)
+    gui.ask(string.format(gui.str("Delete project %s permanently?"), string.escape(path)), function()
+        debug.log("deleting project: "..path)
+        file.remove_tree(path)
+        refresh_projects_list()
+    end)
 end
