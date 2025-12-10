@@ -1,7 +1,7 @@
 local util = require "util"
 local project_control = require "project_control"
 
-local function refresh_projects_list()
+function refresh_projects_list()
     local projects_dir = "user:projects"
 
     local projects = {}

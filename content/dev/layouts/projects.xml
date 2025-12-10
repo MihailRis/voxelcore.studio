@@ -1,6 +1,7 @@
 <container color='#00000030'>
     <label pos='8'>@Projects</label>
-    <image src='gui/plus' pos='12,32' size='32' color='#FFFFFF80' hover-color='#80808080' interactive='true' onclick='new_project()'/>
+    <image src="gui/plus" pos='12,32' size='32' color='#FFFFFF80' hover-color='#80808080' interactive='true' onclick='new_project()'/>
+    <image src="gui/refresh" pos='374,32' size='32' color='#FFFFFF80' hover-color='#80808080' interactive='true' onclick='refresh_projects_list()'/>
     <panel id="projects" pos='12,68' max-length='500' size='400,400' color='0'></panel>
     <image src="gui/logo" size="512" gravity="bottom-right" margin="100" color="#FFFFFF10"/>
 </container>
