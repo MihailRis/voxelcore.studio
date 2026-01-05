@@ -2,6 +2,7 @@ name = "editor"
 title = "Editor"
 base_packs = ["dev"]
 permissions = [
+    "debugging",
     "network",
     "write-to-user"
 ]
