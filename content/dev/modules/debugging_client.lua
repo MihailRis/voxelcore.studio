@@ -1,4 +1,5 @@
 local Schedule = require "core:schedule"
+local project_control = require "project_control"
 
 local this = {}
 
@@ -188,7 +189,8 @@ function this.start_debugging(on_connected, on_disconnected)
     if not app then
         error("debugging_client.init(app) was not called")
     end
-    local port = app.start_debug_instance()
+    local project = project_control.get_current_project()
+    local port = app.start_debug_instance(nil, project.path)
     schedule:set_timeout(500, function()
         this.connect_debugging(on_connected, on_disconnected, port)
     end)

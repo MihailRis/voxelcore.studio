@@ -7,7 +7,7 @@ function this.init(app)
 end
 
 function this.show_context_menu(pos, options, data)
-    local contextid = random.random(10000, 99999)
+    local contextid = random.uuid()
     local xml = ""
     for i, option in ipairs(options) do
         local text = option[1]
