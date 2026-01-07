@@ -4,10 +4,11 @@ local this = {
 
 function this.init(app)
     this.focus_window = app.focus
+    this.quit_app = app.quit
 end
 
 function this.show_context_menu(pos, options, data)
-    local contextid = random.uuid()
+    local contextid = random.random(1000000, 9999999)
     local xml = ""
     for i, option in ipairs(options) do
         local text = option[1]
