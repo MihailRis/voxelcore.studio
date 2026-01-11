@@ -1,6 +1,4 @@
-local this = {
-    focus_window = nil
-}
+local this = {}
 
 function this.init(app)
     this.focus_window = app.focus
@@ -13,8 +11,8 @@ function this.show_context_menu(pos, options, data)
     for i, option in ipairs(options) do
         local text = option[1]
         local action = option[2] or "local _"
-        xml = xml.."<button onfocus='"..action
-        .."' color='#101010D0' text-align='left' hover-color='#000000D0'>@"
+        xml = xml.."<button onfocus="..string.escape(action)
+        .." color='#101010D0' text-align='left' hover-color='#000000D0'>@"
         ..text.."</button>"
     end
     gui.root.root:add("<panel id='context"
