@@ -265,10 +265,17 @@ function on_control_combination(keycode)
     end
 end
 
-
 events.on("dev:open_file", function(internal_path, path)
     open_file_in_editor(internal_path, path, 1)
 end)
+
+function set_tooltab(name)
+    if name == "scripts" then
+        document.left_panel.src = "dev:files_panel"
+    elseif name == "packages" then
+        document.left_panel.src = "dev:packages_panel"
+    end
+end
 
 function on_open()
     breakpoints_view.init(document)

@@ -1,0 +1,12 @@
+<panel interval="2" color="0" padding="2" scrollable="false">
+    <label>@Packages</label>
+    <textbox pos="2" padding="4,0,4,0" sub-consumer="filter_packs" hint="@Filter"></textbox>
+    <panel size='32' orientation='horizontal' color='0'>
+        <button onclick='new_pack()'>@New</button>
+        <button onclick='add_content()'>@Add</button>
+    </panel>
+    <panel id="packsList" color="#00000030" interval="2" padding="4"
+            size-func="-1,-40" pos="2,38">
+        <!-- content is generated in script -->
+    </panel>
+</panel>

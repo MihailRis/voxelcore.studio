@@ -1,10 +1,15 @@
 <panel size-func="unpack(gui.get_viewport())" orientation="horizontal" color='0'>
     <panel size="48" color='0' padding='10,6,6,6'>
-        <image src='gui/code' interactive='true' color='#FFFFFF80' hover-color='#FFFFFFFF'/>
+        <image src='gui/package' interactive='true' color='#FFFFFF80'
+            hover-color='#FFFFFFFF' tooltip='@Packages'
+            onclick='set_tooltab("packages")'/>
+        <image src='gui/code' interactive='true' color='#FFFFFF80' 
+            hover-color='#FFFFFFFF' tooltip='@Scripts'
+            onclick='set_tooltab("scripts")'/>
     </panel>
     <splitbox size-func="-40,-1" id="editorRoot" orientation="horizontal" split-pos="0.3">
         <splitbox split-pos="0.5">
-            <iframe src="dev:files_panel"></iframe>
+            <iframe id='left_panel' src="dev:packages_panel"></iframe>
             <panel id="locals"
                 color="#00000030" 
                 padding="5,15,5,15">
