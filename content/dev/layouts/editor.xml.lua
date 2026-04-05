@@ -20,6 +20,11 @@ local function cleanup_editor()
     breakpoints_view.clear()
 end
 
+events.on("dev:log_append", function(s)
+    document.output.caret = -1
+    document.output:paste(s..'\n')
+end)
+
 events.on("dev:debugging_stopped", function()
     local pause_position = document.pause_position
     pause_position.visible = false

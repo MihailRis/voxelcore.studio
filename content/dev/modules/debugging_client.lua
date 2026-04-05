@@ -11,6 +11,7 @@ local schedule = Schedule()
 local app
 local listener
 local paused = false
+local logstream
 
 local function send(msg)
     if not socket then
@@ -152,9 +153,10 @@ function this.is_paused()
     return paused and debugging
 end
 
-function this.connect_debugging(on_connected, on_disconnected, port)
+function this.connect_debugging(on_connected, on_disconnected, port, logfile)
     disconnected_callback = on_disconnected
     debugging = true
+    logstream = file.open(logfile, "r")
 
     network.tcp_connect("localhost", port, function(sock)
         socket = sock
@@ -190,14 +192,29 @@ function this.start_debugging(on_connected, on_disconnected)
         error("debugging_client.init(app) was not called")
     end
     local project = project_control.get_current_project()
-    local port = app.start_debug_instance(nil, project.path)
+    local logfile = "user:dbg_"..random.uuid()..".log"
+    local port = app.start_debug_instance(nil, project.path, logfile)
     schedule:set_timeout(500, function()
-        this.connect_debugging(on_connected, on_disconnected, port)
+        this.connect_debugging(on_connected, on_disconnected, port, logfile)
     end)
 end
 
 function this.update(delta)
     schedule:tick(delta)
+    local lines_read = 0
+    while logstream and lines_read < 6 do
+        if not logstream:is_alive() then
+            logstream = nil
+            break
+        end
+        local output = logstream:read()
+        if output then
+            events.emit("dev:log_append", output)
+            lines_read = lines_read + 1
+        else
+            break
+        end
+    end
     if socket and not socket:is_connected() then
         debugging = false
         socket = nil
