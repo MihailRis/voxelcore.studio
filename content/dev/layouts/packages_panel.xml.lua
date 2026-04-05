@@ -1,4 +1,4 @@
-local util = require "util"
+local util = require "common/util"
 local ui_util = require "ui_util"
 local project_control = require "project_control"
 local validation = require "validation"

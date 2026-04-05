@@ -1,4 +1,5 @@
-local util = require "util"
+local util = require "common/util"
+local pack_files = require "filesystem/pack_files"
 
 local this = {}
 local project_packs = {}
@@ -23,7 +24,7 @@ function this.load_project(path)
     local project_info = toml.parse(file.read(project_file))
     project_info.path = path
 
-    project_packs = util.load_packs_info(file.join(path, "content"))
+    project_packs = pack_files.load_packs_info(file.join(path, "content"))
     current_project = project_info
 end
 
@@ -39,8 +40,8 @@ function this.get_available()
 
     local packs = {}
     local content_path = file.join(current_project.path, "content")
-    table.merge(packs, util.load_packs_info("user:content"))
-    table.merge(packs, util.load_packs_info(content_path))
+    table.merge(packs, pack_files.load_packs_info("user:content"))
+    table.merge(packs, pack_files.load_packs_info(content_path))
     available_packs = packs
     return packs
 end

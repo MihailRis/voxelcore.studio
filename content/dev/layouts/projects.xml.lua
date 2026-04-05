@@ -1,5 +1,4 @@
-local util = require "util"
-local ui_util = require "ui_util"
+local util = require "common/util"
 local project_control = require "project_control"
 
 function refresh_projects_list()
