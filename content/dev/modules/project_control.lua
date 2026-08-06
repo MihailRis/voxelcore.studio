@@ -81,4 +81,17 @@ function this.create_pack(packid)
     this.add_pack(packid)
 end
 
+function this.get_internal_path(source, project_packs)
+    project_packs = project_packs or this.get_packs()
+    if not source:find(':') then
+        return
+    end
+    local prefix, path = parse_path(source)
+    local pack_info = project_packs[prefix]
+    if not pack_info then
+        return
+    end
+    return file.join(pack_info.path, path)
+end
+
 return this

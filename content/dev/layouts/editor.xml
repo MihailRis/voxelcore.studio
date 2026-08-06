@@ -1,62 +1,16 @@
 <panel size-func="unpack(gui.get_viewport())" orientation="horizontal" color='0'>
-    <panel size="48" color='0' padding='10,6,6,6'>
-        <image src='gui/package' interactive='true' color='#FFFFFF80'
-            hover-color='#FFFFFFFF' tooltip='@Packages'
-            onclick='set_tooltab("packages")'/>
-        <image src='gui/code' interactive='true' color='#FFFFFF80' 
-            hover-color='#FFFFFFFF' tooltip='@Scripts'
-            onclick='set_tooltab("scripts")'/>
+    <panel id="sideToolbar" size="48" color='0' padding='10,6,6,6'>
     </panel>
     <splitbox size-func="-40,-1" id="editorRoot" orientation="horizontal" split-pos="0.3">
         <splitbox split-pos="0.5">
-            <iframe id='left_panel' src="dev:packages_panel"></iframe>
+            <iframe id='left_panel'/>
             <panel id="locals"
                 color="#00000030" 
                 padding="5,15,5,15">
             </panel>
         </splitbox>
         <splitbox id="editorContainer" split-pos="0.8">
-            <splitbox id="codePanel" orientation="horizontal">
-                <container color="#00000080" cursor="text"
-                        onclick="document.editor.focused = true document.editor.caret = -1">
-                    <container size-func="-1,30" color="#00000020">
-                        <image id="lockIcon" src="gui/lock" tooltip="@Read only"
-                                interactive="true" onclick="unlock_access()"
-                                color="#FFFFFF80" size="16" pos="4,6"
-                                hover-color="#1080FF"></image>
-                        <panel orientation="horizontal" gravity="top-right" 
-                                size="68,24" padding="8" interval="8" color="0">
-                            <image id="saveIcon" src="gui/save" tooltip="@Save" 
-                                enabled="false" interactive="true" 
-                                hover-color="#1080FF"
-                                onclick="save_current_file()"
-                                color="#FFFFFF80" size="16"></image>
-                            <image id="infoIcon" src="gui/info" tooltip="@editor.info.tooltip" 
-                                enabled="true" interactive="true" 
-                                color="#FFFFFF80" size="16"></image>
-                        </panel>
-                        <label id="title" pos="26,8"></label>
-                    </container>
-                    <textbox
-                        id='editor'
-                        pos='0,30'
-                        color='0'
-                        autoresize='true'
-                        margin='0'
-                        padding='5'
-                        multiline='true'
-                        line-numbers='true'
-                        oncontrolkey='on_control_combination'
-                        size-func="-10,40"
-                        text-wrap='false'
-                        scroll-step='50'
-                        syntax='lua'
-                        onrightclick='show_editor_context_menu()'
-                        keep-line-selection='true'
-                    />
-                </container>
-                <modelviewer id="modelviewer" visible="false" center="0.5,0.5,0.5" cam-rotation="45,-45,0"/>
-            </splitbox>
+            <iframe src="dev:code_panel"/>
             <splitbox orientation="horizontal" split-pos="0.4">
                 <panel id="traceback" padding="4" color="#000000A0">
                 </panel>
