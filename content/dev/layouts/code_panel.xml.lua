@@ -51,7 +51,6 @@ function open_file_in_editor(internal_path, path, target_line)
     else
         document.modelviewer.visible = false
     end
-    document.codePanel:refresh()
 
     local editor = document.editor
     local source = file.read(internal_path):gsub('\t', '    ')

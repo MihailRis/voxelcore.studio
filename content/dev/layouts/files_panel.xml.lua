@@ -58,6 +58,7 @@ local function add_files(path, files_list, tag)
 end
 
 function on_open()
+    registry = {}
     local packs = project_control.get_packs()
     for i, packinfo in pairs(packs) do
         local modules_dir = file.join(packinfo.path, "modules")
