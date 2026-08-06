@@ -23,7 +23,10 @@ end)
 function show_file_context_menu()
     local elem = document.file_btn
     local pos = vec2.add(elem.pos, {0, elem.size[2]})
-    ui_util.show_context_menu(pos, {{"New project"}, {"Open project"}, {"Save"}, {"Close"}, {"Settings"}, {"Exit", "DATA.ui_util.quit_app()"}}, {ui_util = ui_util})
+    ui_util.show_context_menu(pos, {
+        {"Open project", "gui.root.main_frame.src = 'dev:projects'"},
+        {"Exit", "DATA.ui_util.quit_app(true)"}
+    }, {ui_util = ui_util})
 end
 
 function start_debugging()

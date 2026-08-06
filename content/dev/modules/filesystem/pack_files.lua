@@ -1,22 +1,14 @@
+local util = require "common/util"
+local Pack = require "model/pack_model"
+
 local this = {}
-
-local format_parsers = {
-    toml=toml.parse,
-    json=json.parse,
-    yaml=yaml.parse,
-}
-
-function this.read_object(filename)
-    local ext = file.ext(filename)
-    return format_parsers[ext](file.read(filename))
-end
 
 function this.read_pack_info(package_file)
     local dir = file.parent(package_file)
-    local info = this.read_object(package_file)
-    info.id = info.id or file.stem(dir)
-    info.path = dir
-    return info
+    local info = util.read_object(package_file)
+    return Pack(
+        info.id or file.stem(dir), dir, info.title
+    )
 end
 
 function this.load_packs_info(content_dir)
@@ -39,10 +31,6 @@ function this.load_packs_info(content_dir)
         ::continue::
     end
     return packs_info
-end
-
-function this.get_project_path(name)
-    return file.join("user:projects", name)
 end
 
 return this
