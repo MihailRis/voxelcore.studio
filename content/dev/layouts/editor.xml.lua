@@ -1,4 +1,5 @@
 local debugging_client = require "debugging_client"
+local project_control = require "project_control"
 
 local function add_side_tab(doc, icon, tooltip)
     document.sideToolbar:add(string.format([[
@@ -62,7 +63,7 @@ events.on("dev:debugging_paused", function(reason, stack)
     local tb_list = document.traceback
     local srcsize = tb_list.size
     for _, frame in ipairs(stack) do
-        local internal_path = get_internal_path(frame.source, project_packs) or "?"
+        local internal_path = project_control.get_internal_path(frame.source) or "?"
         local callback = ""
         local framestr = ""
         if frame.what == "C" then
