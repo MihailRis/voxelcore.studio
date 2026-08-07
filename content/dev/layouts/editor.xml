@@ -1,25 +1,25 @@
 <panel size-func="unpack(gui.get_viewport())" orientation="horizontal" color='0'>
     <panel id="sideToolbar" size="48" color='0' padding='10,6,6,6'>
     </panel>
-    <splitbox size-func="-40,-1" id="editorRoot" orientation="horizontal" split-pos="0.3">
+    <splitbox size-func="-53,-1" id="editorRoot" orientation="horizontal" split-pos="0.3">
         <splitbox split-pos="0.5">
-            <iframe id='left_panel'/>
+            <iframe id='left_panel' />
             <panel id="locals"
-                color="#00000030" 
+                color="#00000030"
                 padding="5,15,5,15">
             </panel>
         </splitbox>
         <splitbox id="editorContainer" split-pos="0.8">
-            <iframe src="dev:code_panel"/>
+            <iframe src="dev:code_panel" size-func="-1,-32" />
             <splitbox orientation="horizontal" split-pos="0.4">
                 <panel id="traceback" padding="4" color="#000000A0">
                 </panel>
-                <textbox id="output" 
-                            padding="4" 
-                            editable="false" 
-                            markup="md" 
-                            multiline="true" 
-                            color="#000000A0">
+                <textbox id="output"
+                    padding="4"
+                    editable="false"
+                    markup="md"
+                    multiline="true"
+                    color="#000000A0">
                 </textbox>
             </splitbox>
         </splitbox>
