@@ -11,4 +11,8 @@ function this.check_pack_id(text)
     return text:match("^[%a_%-][%w_%-]+$")
 end
 
+function this.check_content_unit_id(text)
+    return this.check_pack_id(text)
+end
+
 return this;

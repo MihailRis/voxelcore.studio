@@ -1,3 +1,5 @@
+local VCSTUDIO_DIR = ".vcstudio"
+
 local util = require "common/util"
 local pack_files = require "filesystem/pack_files"
 
@@ -26,6 +28,7 @@ function this.load_project(path)
 
     project_packs = pack_files.load_packs_info(file.join(path, "content"))
     current_project = project_info
+    file.mkdirs(file.join(project_info.path, VCSTUDIO_DIR))
 end
 
 function this.get_packs()

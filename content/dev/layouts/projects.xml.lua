@@ -10,6 +10,7 @@ function refresh_projects_list()
     document.projects:clear()
     for i, path in ipairs(dirs) do
         local project = toml.parse(file.read(file.join(path, "project.toml")))
+        project.title = project.title or project.name
         project.path = path
         project.id = random.uuid()
         document.projects:add(gui.template("project", project))

@@ -30,8 +30,8 @@ function on_control_combination(keycode)
     end
 end
 
-events.on("dev:open_file", function(internal_path, path)
-    open_file_in_editor(internal_path, path, 1)
+events.on("dev:open_file", function(internal_path, path, target_line)
+    open_file_in_editor(internal_path, path, target_line or 1)
 end)
 
 --- Open a file in the code editor.

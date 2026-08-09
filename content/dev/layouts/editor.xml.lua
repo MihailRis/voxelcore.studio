@@ -93,6 +93,12 @@ events.on("dev:debugging_paused", function(reason, stack)
     tb_list.size = srcsize
 end)
 
+local function add_tab(title)
+    document.tabsPanel:add(gui.template("editor_tab", {
+        title = string.escape_xml(title)
+    }))
+end
+
 function on_open()
     add_side_tab("dev:packages_panel", "gui/package", gui.str("Package"))
     add_side_tab("dev:files_panel", "gui/code", gui.str("Scripts"))

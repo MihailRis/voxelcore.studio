@@ -1,7 +1,14 @@
 <panel interval="2" color="0" padding="2" scrollable="false">
     <textbox pos="2" padding="4,0,4,0" sub-consumer="filter_files" hint="@Filter"></textbox>
+    <panel size='32' orientation='horizontal' color='0'>
+        <select context="file-type" onselect="function(opt) new_file(opt) end"
+                width="150" mode="button">
+            +
+            <option value="module">@Module</option>
+        </select>
+    </panel>
     <panel id="filesList" color="#00000030" interval="6" padding="4"
-            size-func="-1,-40" pos="2,38">
+            size-func="-1,-72" pos="2,38">
         <!-- content is generated in script -->
     </panel>
 </panel>
