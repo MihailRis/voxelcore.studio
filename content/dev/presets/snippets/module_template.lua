@@ -1,5 +1,5 @@
 local this = {}
 
--- fill the module with functions :here
+::snippet_line::
 
 return this

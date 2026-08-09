@@ -1,11 +1,16 @@
 local project_control = require "project_control"
 local validation = require "validation"
-
-function open_file(filename, path, target_line)
-    events.emit("dev:open_file", filename, path, target_line)
-end
+local ui_util = require "ui_util"
 
 local registry = {}
+
+local function find_in_registry(filename)
+    for i, entry in ipairs(registry) do
+        if entry.filename == filename then
+            return entry
+        end
+    end
+end
 
 local function build_files_list(files, highlighted_part)
     local files_list = document.filesList
@@ -27,12 +32,47 @@ local function build_files_list(files, highlighted_part)
         files_list:add(gui.template("script_file", {
             icon = file_info.tag,
             open_func = "open_file",
+            open_context_menu = "open_context_menu",
             filename = file_info.filename,
             content_path = file_info.content_path,
             path = file.path(parent) == "" and parent or parent .. "/",
             name = file.name(filename)
         }))
     end
+end
+
+function open_file(filename, path, target_line)
+    events.emit("dev:open_file", filename, path, target_line)
+end
+
+function rename_file(filename)
+    gui.show_input_dialog("Enter new name for " .. string.escape(file.name(filename)), function(name)
+        local target = find_in_registry(filename)
+        if not target then
+            return
+        end
+        local content = file.read(filename)
+        local parent = file.parent(filename)
+        local prev_filename = target.filename
+        local new_filename = file.join(parent, name .. ".lua")
+        file.write(new_filename, content)
+        file.remove(prev_filename)
+        target.filename = new_filename
+        target.content_path = file.join(file.parent(target.content_path), name..".lua")
+        events.emit("dev:rename_file", prev_filename, new_filename)
+        build_files_list(registry)
+
+    end, validation.check_content_unit_id)
+end
+
+function open_context_menu(filename)
+    local mousepos = input.get_mouse_pos()
+    ui_util.show_context_menu(mousepos, {
+        {"Rename", string.format("DATA.rename_file(%s)", string.escape(filename))},
+        {"Delete", "print('delete')"}
+    }, {
+        rename_file = rename_file
+    })
 end
 
 function filter_files(text)
@@ -74,11 +114,11 @@ function new_file(file_type)
                 content_path = packinfo.id..":modules/"..name..".lua"
             }
             local snippet = file.read("dev:presets/snippets/module_template.lua")
-            local snippet_line = snippet:find(":here")
+            local snippet_line = snippet:find("::snippet_line::")
             if snippet_line then
                 snippet_line = select(2, string.gsub(snippet:sub(1, snippet_line), "\n", "")) + 1
+                snippet = snippet:gsub("::snippet_line::", "")
             end
-            print("snippet_line", snippet_line)
             file.write(info.filename, snippet)
             table.insert(registry, info)
             build_files_list(registry)

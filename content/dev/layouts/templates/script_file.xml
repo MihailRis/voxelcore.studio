@@ -4,6 +4,7 @@
         pos="20,2"
         interactive="true"
         onclick='%{open_func}("%{filename}", "%{content_path}")'
+        onrightclick='%{open_context_menu}("%{filename}")'
         markup='md'
         tooltip='%{unit}'
         size-func="-1,-1">
