@@ -1,5 +1,6 @@
 local debugging_client = require "debugging_client"
 local project_control = require "project_control"
+local registry = require "common/registry"
 
 local function add_side_tab(doc, icon, tooltip)
     document.sideToolbar:add(string.format([[
@@ -20,6 +21,14 @@ end)
 events.on("dev:log_append", function(s)
     document.output.caret = -1
     document.output:paste(s..'\n')
+end)
+
+events.on("dev:request_open_file", function(tag, filename, path, target_line)
+    local editor = registry.get_editor(tag)
+    local instanceid = editor.."."..random.uuid()
+    gui.load_document(string.format("dev:layouts/%s.xml", file.name(editor)), instanceid)
+    document.editorPanel.src = instanceid
+    events.emit("dev:open_file", filename, path, target_line)
 end)
 
 local function show_locals(stack, frame_index)

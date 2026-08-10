@@ -14,7 +14,7 @@
                 <panel id="tabsPanel" size-func="-1,30" color='#00000010' orientation='horizontal'
                     padding='2' interval='2'>
                 </panel>
-                <iframe src="dev:code_panel" pos="0,32" size-func="-1,-32" />
+                <iframe id="editorPanel" src="dev:code_panel" pos="0,32" size-func="-1,-32" />
             </container>
             <splitbox orientation="horizontal" split-pos="0.4">
                 <panel id="traceback" padding="4" color="#000000A0">

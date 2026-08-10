@@ -4,7 +4,7 @@
         "gui/play",
         "gui/stop",
         "gui/connect",
-        "gui/lua_script",
+        "gui/script",
         "gui/code",
         "gui/plus",
         "gui/package"

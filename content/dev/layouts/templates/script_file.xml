@@ -3,7 +3,7 @@
     <label hover-color='#30A0FF'
         pos="20,2"
         interactive="true"
-        onclick='%{open_func}("%{filename}", "%{content_path}")'
+        onclick='%{open_func}("%{tag}", "%{filename}", "%{content_path}")'
         onrightclick='%{open_context_menu}("%{filename}")'
         markup='md'
         tooltip='%{unit}'

@@ -30,6 +30,7 @@ local function build_files_list(files, highlighted_part)
         local parent = file.parent(filename)
 
         files_list:add(gui.template("script_file", {
+            tag = file_info.tag,
             icon = file_info.tag,
             open_func = "open_file",
             open_context_menu = "open_context_menu",
@@ -41,8 +42,8 @@ local function build_files_list(files, highlighted_part)
     end
 end
 
-function open_file(filename, path, target_line)
-    events.emit("dev:open_file", filename, path, target_line)
+function open_file(tag, filename, path, target_line)
+    events.emit("dev:request_open_file", tag, filename, path, target_line)
 end
 
 function rename_file(filename)
@@ -61,17 +62,30 @@ function rename_file(filename)
         target.content_path = file.join(file.parent(target.content_path), name..".lua")
         events.emit("dev:rename_file", prev_filename, new_filename)
         build_files_list(registry)
-
     end, validation.check_content_unit_id)
+end
+
+function delete_file(filename)
+    local info = find_in_registry(filename)
+    if not info then
+        return
+    end
+    gui.ask("Delete file **"..string.escape(info.content_path).."**?", function()
+        table.remove_value(registry, info)
+        file.remove(filename)
+        events.emit("dev:delete_file", filename)
+        build_files_list(registry)
+    end)
 end
 
 function open_context_menu(filename)
     local mousepos = input.get_mouse_pos()
     ui_util.show_context_menu(mousepos, {
         {"Rename", string.format("DATA.rename_file(%s)", string.escape(filename))},
-        {"Delete", "print('delete')"}
+        {"Delete", string.format("DATA.delete_file(%s)", string.escape(filename))},
     }, {
-        rename_file = rename_file
+        rename_file = rename_file,
+        delete_file = delete_file,
     })
 end
 
@@ -122,7 +136,7 @@ function new_file(file_type)
             file.write(info.filename, snippet)
             table.insert(registry, info)
             build_files_list(registry)
-            open_file(info.filename, info.content_path, snippet_line)
+            open_file(info.tag, info.filename, info.content_path, snippet_line)
         end, validation.check_content_unit_id)
     end
 end
@@ -137,7 +151,7 @@ function on_open()
             add_files(packinfo.id..":modules", file.list(modules_dir), "module")
         end
         if file.isdir(scripts_dir) then
-            add_files(packinfo.id..":scripts", file.list(scripts_dir), "lua_script")
+            add_files(packinfo.id..":scripts", file.list(scripts_dir), "script")
         end
         build_files_list(registry)
     end

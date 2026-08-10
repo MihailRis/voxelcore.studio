@@ -6,6 +6,11 @@ local project_control = require "project_control"
 
 local current_file = {}
 local schedule = Schedule()
+local event_handlers = {}
+
+local function listen_event(event, func)
+    table.insert(event_handlers, {event=event, handle=events.on(event, func)})
+end
 
 local function cleanup_editor()
     breakpoints_view.clear()
@@ -30,7 +35,7 @@ function on_control_combination(keycode)
     end
 end
 
-events.on("dev:open_file", function(internal_path, path, target_line)
+listen_event("dev:open_file", function(internal_path, path, target_line)
     open_file_in_editor(internal_path, path, target_line or 1)
 end)
 
@@ -146,17 +151,17 @@ function request_value(frame_index, var_id, path, indent)
     end)
 end
 
-events.on("dev:debugging_stopped", function()
+listen_event("dev:debugging_stopped", function()
     local pause_position = document.pause_position
     pause_position.visible = false
 end)
 
-events.on("dev:debugging_resumed", function()
+listen_event("dev:debugging_resumed", function()
     local pause_position = document.pause_position
     pause_position.visible = false
 end)
 
-events.on("dev:debugging_paused", function(reason, stack)
+listen_event("dev:debugging_paused", function(reason, stack)
     if not reason then
         return
     end
@@ -192,4 +197,10 @@ function on_open()
     document.root:setInterval(10, function()
         schedule:tick(0.01)
     end)
+end
+
+function on_close()
+    for i, handler in ipairs(event_handlers) do
+        events.remove(handler.event, handler.handle)
+    end
 end
