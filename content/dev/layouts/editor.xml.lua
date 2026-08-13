@@ -25,45 +25,53 @@ events.on("dev:log_append", function(s)
     document.output:paste(s..'\n')
 end)
 
-local function find_tab(docid)
+local function find_tab(filename, editor)
     for i, tab in ipairs(tabs) do
-        if tab.tab_id == docid then
+        if tab.filename == filename and tab.editor == editor then
             return tab
         end
     end
 end
 
-local function index_of_tab(docid)
+local function find_tab_by_id(tab_id)
     for i, tab in ipairs(tabs) do
-        if tab.tab_id == docid then
+        if tab.tab_id == tab_id then
+            return tab
+        end
+    end
+end
+
+local function index_of_tab(tab_id)
+    for i, tab in ipairs(tabs) do
+        if tab.tab_id == tab_id then
             return i
         end
     end
 end
 
-local function switch_to_tab(docid)
+local function switch_to_tab(tab_id)
     if prev_tab and prev_tab.exists then
         prev_tab.color = {0, 0, 0, 40}
         prev_tab.hoverColor = {0, 0, 0, 120}
         prev_tab = nil
     end
-    local target = find_tab(docid)
+    local target = find_tab_by_id(tab_id)
     if not target then
         return
     end
-    document.editorPanel.src = docid
+    document.editorPanel.src = tab_id
     target = document[target.id]
     target.color = {0, 0, 0, 120}
     target.hoverColor = {0, 0, 0, 240}
     prev_tab = target
 end
 
-local function close_tab(docid)
-    local target = find_tab(docid)
+local function close_tab(tab_id)
+    local target = find_tab_by_id(tab_id)
     if not target then
         return
     end
-    local index = index_of_tab(docid)
+    local index = index_of_tab(tab_id)
     document[target.id]:destruct()
     table.remove_value(tabs, target)
     if prev_tab.id == target.id then
@@ -77,30 +85,38 @@ local function close_tab(docid)
     end
 end
 
-local function add_tab(title, docid)
-    local tabid =  "tab-" .. docid
+local function add_tab(title, tab_id, filename, editor)
+    local tab_element_id =  "tab-" .. tab_id
     document.tabsPanel:add(gui.template("editor_tab", {
-        id = tabid,
+        id = tab_element_id,
         title = string.escape_xml(title),
-        tab_id = docid,
+        tab_id = tab_id,
     }), {
         switch_to_tab = switch_to_tab,
         close_tab = close_tab,
     })
     table.insert(tabs, {
-        id = tabid,
-        tab_id = docid,
+        id = tab_element_id,
+        tab_id = tab_id,
+        filename = filename,
+        editor = editor,
     })
-    return docid
+    return tab_id
 end
 
 events.on("dev:request_open_file", function(tag, filename, path, target_line)
     local editor = registry.get_editor(tag)
+    local found_tab = find_tab(filename, editor)
+    if found_tab then
+        switch_to_tab(found_tab.tab_id)
+        return
+    end
+
     local instanceid = editor.."."..random.uuid()
     gui.load_document(editor, instanceid)
     document.editorPanel.src = instanceid
     events.emit("dev:open_file", filename, path, target_line)
-    add_tab(file.name(filename), instanceid)
+    add_tab(file.name(filename), instanceid, filename, editor)
     switch_to_tab(instanceid)
 end)
 
