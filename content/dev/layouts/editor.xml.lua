@@ -97,9 +97,7 @@ end
 events.on("dev:request_open_file", function(tag, filename, path, target_line)
     local editor = registry.get_editor(tag)
     local instanceid = editor.."."..random.uuid()
-    gui.load_document(
-        string.format("dev:layouts/%s.xml", file.name(editor)), instanceid
-    )
+    gui.load_document(editor, instanceid)
     document.editorPanel.src = instanceid
     events.emit("dev:open_file", filename, path, target_line)
     add_tab(file.name(filename), instanceid)

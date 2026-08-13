@@ -1,7 +1,7 @@
 local this = {}
 
 local editors = {}
-local default_editor = "dev:code_panel"
+local default_editor = "dev:layouts/editors/code_editor.xml"
 
 function this.register_editor(file_type, doc_name)
     editors[file_type] = doc_name

@@ -189,6 +189,7 @@ function on_open()
         <container id='pause_position' color='#FFFF0030' size-func='-1,24' visible='false'>
         </container>
     ]])
+    editor.focused = true
 
     schedule:set_interval(100, function()
         refresh_file_title()
