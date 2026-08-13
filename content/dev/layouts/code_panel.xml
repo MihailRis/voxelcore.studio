@@ -1,5 +1,5 @@
 <splitbox id="codePanel" orientation="horizontal">
-    <container color="#00000080" cursor="text"
+    <container color="#00000050" cursor="text"
             onclick="document.editor.focused = true document.editor.caret = -1">
         <container size-func="-1,30" color="#00000020">
             <image id="lockIcon" src="gui/lock" tooltip="@Read only"

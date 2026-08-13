@@ -118,10 +118,10 @@ local function add_files(path, files_list, tag)
 end
 
 function new_file(file_type)
+    local packinfo = project_control.get_packs()["base"]
+    local packpath = packinfo.path
     if file_type == "module" then
-        gui.show_input_dialog("Enter script name", function(name)
-            local packinfo = project_control.get_packs()["base"]
-            local packpath = packinfo.path
+        gui.show_input_dialog("Enter module name", function(name)
             local info = {
                 tag = "module",
                 filename = file.join(file.join(packpath, "modules"), name..".lua"),
@@ -137,6 +137,18 @@ function new_file(file_type)
             table.insert(registry, info)
             build_files_list(registry)
             open_file(info.tag, info.filename, info.content_path, snippet_line)
+        end, validation.check_content_unit_id)
+    elseif file_type == "script" then
+        gui.show_input_dialog("Enter script name", function(name)
+            local info = {
+                tag = "script",
+                filename = file.join(file.join(packpath, "scripts"), name..".lua"),
+                content_path = packinfo.id..":scripts/"..name..".lua"
+            }
+            file.write(info.filename, "")
+            table.insert(registry, info)
+            build_files_list(registry)
+            open_file(info.tag, info.filename, info.content_path)
         end, validation.check_content_unit_id)
     end
 end

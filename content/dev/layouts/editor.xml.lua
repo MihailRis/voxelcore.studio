@@ -1,6 +1,8 @@
 local debugging_client = require "debugging_client"
 local project_control = require "project_control"
 local registry = require "common/registry"
+local tabs = {}
+local prev_tab
 
 local function add_side_tab(doc, icon, tooltip)
     document.sideToolbar:add(string.format([[
@@ -23,12 +25,85 @@ events.on("dev:log_append", function(s)
     document.output:paste(s..'\n')
 end)
 
+local function find_tab(docid)
+    for i, tab in ipairs(tabs) do
+        if tab.tab_id == docid then
+            return tab
+        end
+    end
+end
+
+local function index_of_tab(docid)
+    for i, tab in ipairs(tabs) do
+        if tab.tab_id == docid then
+            return i
+        end
+    end
+end
+
+local function switch_to_tab(docid)
+    if prev_tab and prev_tab.exists then
+        prev_tab.color = {0, 0, 0, 40}
+        prev_tab.hoverColor = {0, 0, 0, 120}
+        prev_tab = nil
+    end
+    local target = find_tab(docid)
+    if not target then
+        return
+    end
+    document.editorPanel.src = docid
+    target = document[target.id]
+    target.color = {0, 0, 0, 120}
+    target.hoverColor = {0, 0, 0, 240}
+    prev_tab = target
+end
+
+local function close_tab(docid)
+    local target = find_tab(docid)
+    if not target then
+        return
+    end
+    local index = index_of_tab(docid)
+    document[target.id]:destruct()
+    table.remove_value(tabs, target)
+    if prev_tab.id == target.id then
+        if #tabs == 0 then
+            document.editorPanel.src = ""
+        elseif index - 1 == #tabs then
+            switch_to_tab(tabs[index - 1].tab_id)
+        else
+            switch_to_tab(tabs[index].tab_id)
+        end
+    end
+end
+
+local function add_tab(title, docid)
+    local tabid =  "tab-" .. docid
+    document.tabsPanel:add(gui.template("editor_tab", {
+        id = tabid,
+        title = string.escape_xml(title),
+        tab_id = docid,
+    }), {
+        switch_to_tab = switch_to_tab,
+        close_tab = close_tab,
+    })
+    table.insert(tabs, {
+        id = tabid,
+        tab_id = docid,
+    })
+    return docid
+end
+
 events.on("dev:request_open_file", function(tag, filename, path, target_line)
     local editor = registry.get_editor(tag)
     local instanceid = editor.."."..random.uuid()
-    gui.load_document(string.format("dev:layouts/%s.xml", file.name(editor)), instanceid)
+    gui.load_document(
+        string.format("dev:layouts/%s.xml", file.name(editor)), instanceid
+    )
     document.editorPanel.src = instanceid
     events.emit("dev:open_file", filename, path, target_line)
+    add_tab(file.name(filename), instanceid)
+    switch_to_tab(instanceid)
 end)
 
 local function show_locals(stack, frame_index)
@@ -101,12 +176,6 @@ events.on("dev:debugging_paused", function(reason, stack)
     end
     tb_list.size = srcsize
 end)
-
-local function add_tab(title)
-    document.tabsPanel:add(gui.template("editor_tab", {
-        title = string.escape_xml(title)
-    }))
-end
 
 function on_open()
     add_side_tab("dev:packages_panel", "gui/package", gui.str("Package"))
