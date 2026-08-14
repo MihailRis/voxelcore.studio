@@ -1,5 +1,6 @@
 <container id='%{id}' size='160' color="#00000020" hover-color="#FFFFFF40" 
     onclick="DATA.switch_to_tab('%{tab_id}')"
-    ondoubleclick="DATA.close_tab('%{tab_id}')">
+    ondoubleclick="DATA.close_tab('%{tab_id}')"
+    onmiddleclick="DATA.close_tab('%{tab_id}')">
     <label pos='5,8'>%{title}</label>
 </container>
