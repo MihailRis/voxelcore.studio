@@ -103,7 +103,7 @@ end
 
 local function add_files(path, files_list, tag)
     for j, script_file in ipairs(files_list) do
-        if file.ext(script_file) ~= "lua" then
+        if file.ext(script_file) ~= "lua" and file.ext(script_file) ~= "vca" then
             goto continue
         end
         local name = file.name(script_file)
@@ -159,11 +159,15 @@ function on_open()
     for i, packinfo in pairs(packs) do
         local modules_dir = file.join(packinfo.path, "modules")
         local scripts_dir = file.join(packinfo.path, "scripts")
+        local animation_dir = file.join(packinfo.path, "animation")
         if file.isdir(modules_dir) then
             add_files(packinfo.id..":modules", file.list(modules_dir), "module")
         end
         if file.isdir(scripts_dir) then
             add_files(packinfo.id..":scripts", file.list(scripts_dir), "script")
+        end
+        if file.isdir(animation_dir) then
+            add_files(packinfo.id..":animation", file.list(animation_dir), "animation")
         end
         build_files_list(registry)
     end
